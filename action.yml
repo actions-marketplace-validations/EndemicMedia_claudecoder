@@ -1,5 +1,5 @@
 name: ClaudeCoderAction
-description: 'Process pull requests using AWS Bedrock and Claude 3.5 Sonnet to suggest code changes'
+description: 'Process pull requests using AWS Bedrock and Claude 3.7 Sonnet to suggest code changes'
 branding:
   icon: "cpu"
   color: orange
@@ -7,16 +7,55 @@ inputs:
   github-token:
     description: 'GitHub token'
     required: true
+  ai-provider:
+    description: 'AI provider to use (aws or openrouter). Auto-detected if not specified.'
+    required: false
+    default: 'auto'
   aws-access-key-id:
-    description: 'AWS Access Key ID'
-    required: true
+    description: 'AWS Access Key ID (required for AWS provider)'
+    required: false
   aws-secret-access-key:
-    description: 'AWS Secret Access Key'
-    required: true
+    description: 'AWS Secret Access Key (required for AWS provider)'
+    required: false
   aws-region:
     description: 'AWS Region'
     required: false
     default: 'us-east-1'
+  openrouter-api-key:
+    description: 'OpenRouter API Key (required for OpenRouter provider)'
+    required: false
+  models:
+    description: 'Comma-separated list of models to try in priority order. Use only OpenRouter free models OR only AWS Bedrock models - never mix providers.'
+    required: false
+    default: 'moonshotai/kimi-k2:free'
+  required-label:
+    description: 'Label required on PR for processing (default: claudecoder)'
+    required: false
+    default: 'claudecoder'
+  max-tokens:
+    description: 'Maximum number of tokens for Claude to generate (up to 128K)'
+    required: false
+    default: '64000'
+  max-requests:
+    description: 'Maximum number of requests to make to AWS Bedrock'
+    required: false
+    default: '10'
+  enable-thinking:
+    description: 'Enable Claude''s extended thinking capability (true/false)'
+    required: false
+    default: 'true'
+  thinking-budget:
+    description: 'Token budget for Claude''s thinking process (minimum: 1024)'
+    required: false
+    default: '1024'
+  extended-output:
+    description: 'Enable 128K extended output capability (true/false)'
+    required: false
+    default: 'true'
+  request-timeout:
+    description: 'API request timeout in milliseconds'
+    required: false
+    default: '3600000'
 runs:
   using: "node20"
   main: "dist/index.js"
